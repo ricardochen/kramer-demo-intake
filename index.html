@@ -260,13 +260,16 @@
           <p class="text-[#BCCEE2] text-[14px] sm:text-[14.5px] leading-relaxed mt-2">
             En una sesión revisamos dónde se te van las consultas hoy y qué vale la pena automatizar primero. Sin costo y sin compromiso.
           </p>
+          <p class="text-[#BCCEE2] text-[14px] sm:text-[14.5px] leading-relaxed mt-2">
+            Dime cómo contactarte y te escribo yo. Sin formulario.
+          </p>
         </div>
         <div class="shrink-0 w-full sm:w-auto">
           <button id="cta-start" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-[#0B1F3A] font-extrabold text-[14px] rounded-xl px-6 py-3 transition shadow-lg" style="background:#C9A34E">
             Agendar mi diagnóstico
             <svg style="position:relative;top:-1px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
-          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Diagnóstico gratis. Sin compromiso.</p>
+          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Tres preguntas aquí mismo. 20 segundos.</p>
         </div>
       </div>
       <div class="border-t border-white/10 px-7 sm:px-10 pt-5 pb-9 flex flex-col sm:flex-row sm:flex-wrap items-center gap-x-4 gap-y-2">
@@ -275,7 +278,7 @@
         <p class="text-[11px] italic" style="color:#C9A34E">“Primero lo mapeas, después lo automatizas.”</p>
       </div>
       <div class="px-7 sm:px-10 pb-7">
-        <p class="text-[10.5px] text-[#6B7F99] leading-relaxed">Demo con datos ficticios de un despacho de ejemplo. El agente entrega información general y no constituye asesoría legal ni crea relación abogado–cliente.</p>
+        <p class="text-[10.5px] text-[#6B7F99] leading-relaxed">Toda la información que responde el agente proviene del website público de <span class="font-semibold text-[#9FB3C8]">Kraemer &amp; Kraemer</span>. El agente entrega información general y no constituye asesoría legal ni crea relación abogado–cliente.</p>
       </div>
     </div>
   </section>
@@ -423,10 +426,23 @@ document.querySelectorAll('.langbar button').forEach(function(b){
   b.addEventListener('click', function(){ send(b.getAttribute('data-say')); });
 });
 
-// CTA final: lleva al chat
+// CTA final: captura el lead en el mismo chat (mismo patron que el demo del banco).
+// Si el visitante ya converso, no reiniciamos nada: solo lo llevamos al chat.
+const CTA_PROMPT = 'Quiero agendar mi diagnostico sin costo.';
+let ctaSent = false;
 document.getElementById('cta-start').addEventListener('click', function(){
   document.getElementById('chat-step').scrollIntoView({ behavior:'smooth', block:'center' });
-  setTimeout(function(){ input.focus(); }, 600);
+  if (ctaSent) { setTimeout(function(){ input.focus(); }, 600); return; }
+  ctaSent = true;
+  setTimeout(function(){
+    // Solo arrancamos la captura si el chat sigue en el saludo (nadie ha conversado aun)
+    const soloGreeting = history.filter(function(m){ return m.role === 'user'; }).length === 0;
+    if (soloGreeting) {
+      send(CTA_PROMPT);
+    } else {
+      input.focus();
+    }
+  }, 700);
 });
 
 // Modo inmersivo en móvil (evita que el teclado tape el chat)
