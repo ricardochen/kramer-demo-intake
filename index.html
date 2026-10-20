@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Agente de intake legal — Demo funcional</title>
+<meta name="description" content="Un agente que califica consultas legales en segundos, en inglés, español y alemán, y entrega al abogado un lead estructurado. Nunca da asesoría. Demo funcional.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ricardochen.github.io/kramer-demo-intake/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ricardo Chen — IA operativa">
+<meta property="og:locale" content="es_PA">
+<meta property="og:title" content="Agente de intake legal — Demo funcional">
+<meta property="og:description" content="Califica consultas en inglés, español y alemán. Entrega el lead al abogado en segundos. Nunca da asesoría legal.">
+<meta property="og:url" content="https://ricardochen.github.io/kramer-demo-intake/">
+<meta property="og:image" content="https://ricardochen.github.io/kramer-demo-intake/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Demo del agente de intake legal: el visitante pregunta por residencia en Panamá y el agente califica sin dar asesoría">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agente de intake legal — Demo funcional">
+<meta name="twitter:description" content="Califica consultas en EN/ES/DE. Entrega el lead al abogado. Nunca da asesoría legal.">
+<meta name="twitter:image" content="https://ricardochen.github.io/kramer-demo-intake/og-card.png">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230B1F3A'/><text x='50' y='68' font-size='54' font-family='Georgia,serif' font-weight='bold' text-anchor='middle' fill='%23C9A34E'>K</text></svg>">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0B1220; --navy:#0B1F3A; --navy2:#122B4E; --gold:#C9A34E; --gold2:#B8912F; }
+  html, body { max-width:100%; overflow-x:hidden; }
+  body { font-family:'Inter',system-ui,sans-serif; background:#F4F6F8; color:var(--ink); }
+  .app, .app * { min-width:0; }
+  .app { max-width:900px; margin:0 auto; }
+
+  .step-block { border-radius:20px; padding:22px 20px; margin-bottom:18px; }
+  @media (min-width:640px) { .step-block { padding:26px 28px; margin-bottom:22px; } }
+  .step-1 { background:linear-gradient(135deg,#0B1F3A 0%,#122B4E 100%); border:1px solid #1E3A5F; box-shadow:0 8px 24px rgba(11,31,58,.18); }
+  .step-2 { background:linear-gradient(135deg,#FBF7EC 0%,#F6EEDC 100%); border:1px solid #EAD9A8; }
+  .step-3 { background:#FFFFFF; border:1px solid #E3E8EF; }
+  .step-4 { background:transparent; padding:0; }
+  .step-head { display:flex; align-items:center; gap:11px; margin-bottom:10px; }
+  .step-num { flex-shrink:0; display:grid; place-items:center; width:38px; height:38px; border-radius:13px; background:var(--navy); color:#fff; font-size:17px; font-weight:800; box-shadow:0 3px 10px rgba(11,31,58,.28); }
+  .step-1 .step-num { background:var(--gold); color:#0B1F3A; box-shadow:0 3px 12px rgba(201,163,78,.45); }
+  .step-2 .step-num { background:var(--gold2); box-shadow:0 3px 10px rgba(184,145,47,.3); }
+  .step-title { font-size:17px; font-weight:800; letter-spacing:-.01em; }
+  @media (min-width:640px) { .step-title { font-size:19px; } }
+  .step-kicker { font-size:10.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#8A94A6; margin-bottom:1px; }
+  .hook { font-size:20px; font-weight:800; line-height:1.28; letter-spacing:-.02em; }
+  @media (min-width:640px) { .hook { font-size:26px; line-height:1.25; } }
+  .hook-em { color:var(--gold); }
+
+  .ba { border-radius:14px; padding:13px 14px; }
+  .ba-antes { background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.24); }
+  .ba-ahora { background:#fff; border:1.5px solid var(--gold); box-shadow:0 6px 20px rgba(0,0,0,.28); }
+  .ba-ico { width:20px; height:20px; border-radius:999px; display:grid; place-items:center; flex-shrink:0; }
+  .ba-ico-bad { background:rgba(255,255,255,.22); color:#E8EFF7; }
+  .ba-ico-good { background:#FBF3DF; color:var(--gold2); }
+  .ba-vs { font-size:16px; color:#0B1F3A; background:var(--gold); border:1px solid var(--gold); width:30px; height:30px; border-radius:999px; display:grid; place-items:center; font-weight:800; }
+
+  .chip-demo { display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start; gap:8px; border:1px solid #E5D6AE; background:#fff; border-radius:12px; padding:13px 13px 11px; text-align:left; font-size:13.5px; line-height:1.35; font-weight:700; color:#0B1220; transition:.18s; box-shadow:0 1px 2px rgba(15,23,42,.05); min-height:96px; position:relative; }
+  .chip-demo:hover { border-color:var(--gold2); transform:translateY(-2px); box-shadow:0 8px 18px rgba(184,145,47,.18); }
+  .chip-demo .note { font-size:10.5px; color:#6B7C93; font-weight:500; line-height:1.3; }
+  .chip-demo .flag { font-size:9.5px; font-weight:800; letter-spacing:.04em; color:var(--gold2); background:#FBF5E6; border:1px solid #EAD9A8; border-radius:4px; padding:1px 5px; }
+  .chip-demo .meta { display:flex; flex-direction:column; gap:2px; margin-top:auto; }
+
+  .chat-panel { height: 62vh; min-height: 420px; max-height: 620px; }
+  @media (max-width: 1023px) { .chat-panel { height: 58vh; min-height: 360px; max-height: none; width:100%; } }
+  .bubble-bot, .bubble-user { overflow-wrap:anywhere; word-break:break-word; }
+  .bubble-bot { background:#fff; border:1px solid #E3E8EF; border-radius:14px; border-bottom-left-radius:4px; }
+  .bubble-user { background:var(--navy); color:#fff; border-radius:14px; border-bottom-right-radius:4px; }
+  .chat-p { margin:0 0 .40rem; line-height:1.6; } .chat-p:last-child{ margin-bottom:0; }
+  .chat-ul { margin:.25rem 0 .5rem; padding-left:1.1rem; list-style:disc; }
+  .chat-ul li { margin:.2rem 0; line-height:1.55; }
+  .typing span { width:6px;height:6px;border-radius:50%;background:#94A3B8;display:inline-block;animation:blink 1.2s infinite; }
+  .typing span:nth-child(2){animation-delay:.2s} .typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+  .scroll::-webkit-scrollbar{width:9px} .scroll::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:9px}
+
+  .leadcard { border:1px solid #BFE3D0; background:#F3FAF6; border-radius:12px; padding:10px 12px; margin-top:8px; }
+  .leadcard .hd { font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#0F5132; margin-bottom:6px; }
+  .leadcard .f { display:flex; justify-content:space-between; gap:10px; font-size:12px; padding:2.5px 0; border-bottom:1px dashed #CFE8DC; }
+  .leadcard .f:last-child { border-bottom:0; }
+  .leadcard .k { color:#5B708B; font-weight:600; }
+  .leadcard .v { color:#0B1220; font-weight:700; text-align:right; overflow-wrap:anywhere; }
+  .guard { background:#FFF8E8; border:1px solid #F2D9A0; border-radius:10px; padding:8px 10px; font-size:11.5px; color:#7A5B12; margin-top:8px; font-weight:600; }
+
+  .langbar { display:flex; gap:5px; flex-wrap:wrap; }
+  .langbar button { font-size:10.5px; font-weight:800; letter-spacing:.04em; border:1px solid #D8DEE7; background:#fff; color:#64748B; border-radius:999px; padding:3px 9px; transition:.15s; }
+  .langbar button:hover { border-color:var(--navy); color:var(--navy); }
+
+  @media (max-width: 1023px) {
+    body.chat-immersive { overflow:hidden; }
+    body.chat-immersive .app > *:not(#chat-step) { display:none !important; }
+    body.chat-immersive #chat-step { position:fixed; inset:0; z-index:9999; margin:0; padding:0; background:#fff; display:flex; flex-direction:column; height:100dvh; max-height:100dvh; overflow:hidden; }
+    body.chat-immersive #chat-step .step-block { border-radius:0; border:0; padding:0; margin:0; height:100%; display:flex; flex-direction:column; }
+    body.chat-immersive #chat-step .step-head { display:none; }
+    body.chat-immersive .chat-panel { height:auto; flex:1 1 auto; min-height:0; max-height:none; margin:0 !important; border-radius:0; border:0; box-shadow:none; }
+    body.chat-immersive #chat-close { display:flex; }
+    body.chat-immersive #log { max-height:none; }
+  }
+  .field-16 { font-size:16px; }
+  #input::placeholder { font-size:13.5px; color:#98A2B3; }
+  textarea#input { overflow-x:hidden; }
+  body.kb-open #chat-step { height: var(--vvh, 100dvh) !important; max-height: var(--vvh, 100dvh) !important; }
+  #chat-close { display:none; align-items:center; gap:5px; font-size:12px; font-weight:700; color:#3D5A78; background:#fff; border:1px solid #D8DEE7; border-radius:999px; padding:5px 11px; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="app px-4 sm:px-6 py-6">
+
+  <header class="mb-7">
+    <div class="flex items-center gap-2.5 mb-2.5">
+      <span class="w-7 h-7 rounded-lg grid place-items-center shrink-0" style="background:linear-gradient(135deg,#0B1F3A,#122B4E)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A34E" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8h14M7 8l-3 6a3 3 0 006 0L7 8zM17 8l-3 6a3 3 0 006 0L17 8z"/></svg>
+      </span>
+      <p class="text-[11px] font-bold uppercase tracking-[.15em]" style="color:#B8912F">Demo funcional · Intake legal</p>
+    </div>
+    <h1 class="text-2xl sm:text-[34px] font-extrabold leading-tight mt-1">El agente que califica consultas mientras el abogado duerme</h1>
+    <p class="text-[14px] sm:text-[15px] text-[#475467] mt-1.5">Responde en inglés, español y alemán. Captura el lead completo. Nunca da asesoría legal.</p>
+    <div class="flex flex-wrap items-center gap-3 mt-4">
+      <a href="#chat-step" class="inline-flex items-center justify-center gap-2 text-white font-extrabold text-[13.5px] rounded-xl px-5 py-2.5 transition shadow-sm" style="background:#0B1F3A">
+        Pruébalo tú mismo
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      </a>
+      <span class="text-[12px] text-[#8A94A6]">Sin registro. Escribe en el idioma que quieras.</span>
+    </div>
+  </header>
+
+  <section class="step-block step-1">
+    <div class="step-head">
+      <span class="step-num">1</span>
+      <div>
+        <p class="step-kicker text-[#8FA6C0]">El punto de partida</p>
+        <h2 class="step-title text-white">El problema que resuelve</h2>
+      </div>
+    </div>
+
+    <p class="hook text-white">
+      Un despacho pierde consultas porque<br class="hidden sm:block">
+      contesta <span class="hook-em">24 horas después</span>, en <span class="hook-em">un solo idioma</span>.
+    </p>
+    <p class="text-[13.5px] text-[#A9BED6] mt-3 leading-relaxed max-w-[60ch]">
+      El visitante no deja un formulario: se va. Y el que sí escribe llega como un correo suelto, sin datos,
+      sin idioma y sin contexto. El agente califica en el primer minuto y entrega un lead estructurado al abogado.
+    </p>
+
+    <div class="grid sm:grid-cols-[1fr_auto_1fr] items-stretch gap-2.5 sm:gap-3 mt-6">
+      <div class="ba ba-antes">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="ba-ico ba-ico-bad">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <p class="text-[11px] font-extrabold uppercase tracking-[.1em] text-[#CBD9E8]">Sin el agente</p>
+        </div>
+        <p class="text-[13px] text-[#DCE7F2] leading-snug">Formulario o correo. Respuesta en 24 h, en el idioma del despacho. El lead llega en texto libre y hay que reconstruirlo a mano.</p>
+      </div>
+
+      <div class="hidden sm:flex items-center justify-center"><span class="ba-vs">&rarr;</span></div>
+
+      <div class="ba ba-ahora">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="ba-ico ba-ico-good">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </span>
+          <p class="text-[11px] font-extrabold uppercase tracking-[.1em]" style="color:#B8912F">Con el agente</p>
+        </div>
+        <p class="text-[13px] leading-snug font-semibold" style="color:#4A3A16">Respuesta en 3 segundos, en el idioma del visitante. Lead con servicio, nacionalidad, ubicación y plazo, listo para el abogado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step-block step-2">
+    <div class="step-head">
+      <span class="step-num">2</span>
+      <div>
+        <p class="step-kicker">La demostración</p>
+        <h2 class="step-title" style="color:#7A5B12">Prueba con un caso</h2>
+      </div>
+    </div>
+    <p class="text-[13.5px] sm:text-[14.5px] text-[#334155] mb-4">Elige un caso y el agente lo atiende abajo, en el idioma que corresponda. El tercero es la trampa: pide asesoría legal.</p>
+    <div class="grid sm:grid-cols-3 gap-2.5" id="chips">
+      <button class="chip-demo" type="button" data-q="Hi, I am interested in the Friendly Nations Visa. Can you tell me about it?">
+        <span class="flag">EN</span>
+        <span>Hi, I am interested in the Friendly Nations Visa.</span>
+        <span class="meta"><span class="note">Califica en inglés, sin dar asesoría</span></span>
+      </button>
+      <button class="chip-demo" type="button" data-q="Hola, quiero constituir una sociedad offshore en Panamá. ¿Qué necesito?">
+        <span class="flag">ES</span>
+        <span>Hola, quiero constituir una sociedad offshore.</span>
+        <span class="meta"><span class="note">Explica el servicio, captura el lead</span></span>
+      </button>
+      <button class="chip-demo" type="button" data-q="¿Yo califico para la visa? ¿Cuánto cuesta y me la aprueban?">
+        <span class="flag">TRAMPA</span>
+        <span>¿Yo califico? ¿Cuánto cuesta y me la aprueban?</span>
+        <span class="meta"><span class="note">Debe negarse a opinar, sin excepción</span></span>
+      </button>
+    </div>
+    <p class="text-[11.5px] text-[#7A6234] mt-4 pt-3.5 border-t" style="border-color:#EAD9A8">El agente nunca interpreta un caso, nunca dice si calificas y nunca cotiza. Eso lo hace el abogado.</p>
+  </section>
+
+  <section class="step-block step-3" id="chat-step">
+    <div class="step-head">
+      <span class="step-num">3</span>
+      <div>
+        <p class="step-kicker">El agente, en vivo</p>
+        <h2 class="step-title text-[#0B1220]">Pregúntale lo que quieras</h2>
+      </div>
+    </div>
+    <div class="chat-panel bg-white rounded-2xl border border-[#DCE3EC] shadow-md overflow-hidden flex flex-col mt-3">
+      <div class="flex items-center justify-between gap-3 px-4 py-2.5 border-b border-[#EEF1F6] bg-[#FAFBFC]">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl grid place-items-center shrink-0 shadow-sm" style="background:linear-gradient(135deg,#0B1F3A,#122B4E)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C9A34E" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8h14M7 8l-3 6a3 3 0 006 0L7 8zM17 8l-3 6a3 3 0 006 0L17 8z"/></svg>
+          </div>
+          <div class="leading-tight min-w-0">
+            <p class="font-bold text-[14px]">Asistente de intake</p>
+            <p class="text-[11.5px] text-emerald-600 font-semibold mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 align-middle"></span>En línea · EN · ES · DE</p>
+          </div>
+        </div>
+        <div class="langbar hidden sm:flex">
+          <button type="button" data-say="Hi, I need help with residency in Panama.">EN</button>
+          <button type="button" data-say="Hola, necesito ayuda con la residencia en Panamá.">ES</button>
+          <button type="button" data-say="Guten Tag, ich brauche Hilfe bei der Aufenthaltsgenehmigung in Panama.">DE</button>
+        </div>
+        <button id="chat-close" type="button" aria-label="Salir del chat">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          Salir
+        </button>
+      </div>
+
+      <div id="log" class="scroll flex-1 overflow-y-auto px-3 sm:px-4 py-4 space-y-3.5" style="min-height:300px"></div>
+
+      <form id="form" class="flex items-end gap-2 p-3 border-t border-[#EEF1F6] bg-[#FAFBFC]">
+        <textarea id="input" rows="1" placeholder="Escribe en el idioma que prefieras…"
+          class="flex-1 min-w-0 resize-none border border-[#D8DEE7] rounded-xl px-3.5 py-3 max-h-32 focus:outline-none focus:border-[#C9A34E] field-16"
+          style="min-height:2.9rem;line-height:1.5"></textarea>
+        <button type="submit" class="text-white font-bold px-5 py-3 rounded-xl text-sm shrink-0" style="background:#0B1F3A">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="step-block step-4">
+    <div class="rounded-3xl overflow-hidden" id="cta" style="background:linear-gradient(135deg,#0B1F3A 0%,#122B4E 60%,#1A1408 140%)">
+      <div class="px-7 sm:px-10 pt-9 pb-8 flex flex-col sm:flex-row items-start gap-6 justify-between">
+        <div class="max-w-xl">
+          <p class="text-[11px] font-bold uppercase tracking-[.15em]" style="color:#C9A34E">Siguiente paso</p>
+          <h2 class="text-white text-2xl sm:text-[28px] font-extrabold leading-[1.15] mt-2 tracking-[-.01em]">Agenda tu diagnóstico sin costo</h2>
+          <p class="text-[#BCCEE2] text-[14px] sm:text-[14.5px] leading-relaxed mt-3">
+            Lo que acabas de ver es un agente montado sobre la base de conocimiento de un despacho: servicios,
+            oficinas, equipo, jurisdicciones. El mismo tipo de agente se puede montar sobre
+            <span class="font-semibold text-white">tus procesos</span>.
+          </p>
+          <p class="text-[#BCCEE2] text-[14px] sm:text-[14.5px] leading-relaxed mt-2">
+            En una sesión revisamos dónde se te van las consultas hoy y qué vale la pena automatizar primero. Sin costo y sin compromiso.
+          </p>
+        </div>
+        <div class="shrink-0 w-full sm:w-auto">
+          <button id="cta-start" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-[#0B1F3A] font-extrabold text-[14px] rounded-xl px-6 py-3 transition shadow-lg" style="background:#C9A34E">
+            Agendar mi diagnóstico
+            <svg style="position:relative;top:-1px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Diagnóstico gratis. Sin compromiso.</p>
+        </div>
+      </div>
+      <div class="border-t border-white/10 px-7 sm:px-10 pt-5 pb-9 flex flex-col sm:flex-row sm:flex-wrap items-center gap-x-4 gap-y-2">
+        <p class="text-[11px] font-bold text-white">Ricardo Chen</p>
+        <p class="text-[11px] text-[#7E96B4]">Consultoría e implementación de IA para empresas</p>
+        <p class="text-[11px] italic" style="color:#C9A34E">“Primero lo mapeas, después lo automatizas.”</p>
+      </div>
+      <div class="px-7 sm:px-10 pb-7">
+        <p class="text-[10.5px] text-[#6B7F99] leading-relaxed">Demo con datos ficticios de un despacho de ejemplo. El agente entrega información general y no constituye asesoría legal ni crea relación abogado–cliente.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const ENDPOINT = 'https://xwvaegliifpggqlmxxhu.supabase.co/functions/v1/kraemer-chat';
+const ORIGEN = 'kramer_demo:' + location.pathname;
+const history = [];
+const log = document.getElementById('log');
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+
+const GREETING = 'Hola. Soy el asistente de intake del despacho. Puedo explicarte los servicios — residencia, sociedades offshore, blockchain y fintech, bienes raíces — y tomar tus datos para que un **abogado** te contacte.\n\nNo doy asesoría legal ni cotizo honorarios: eso lo hace el abogado. ¿En qué te puedo ayudar?';
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function fmt(raw){
+  const lines = esc(raw).split(/\n/); let html=''; let inList=false;
+  const inline = t => t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(^|[^*])\*(?!\s)(.+?)\*(?!\*)/g,'$1<em>$2</em>');
+  for (const ln of lines) {
+    const t = ln.trim();
+    const b = /^[-•*]\s+(.*)$/.exec(t);
+    if (b) { if(!inList){html+='<ul class="chat-ul">';inList=true;} html+='<li>'+inline(b[1])+'</li>'; continue; }
+    if (inList) { html+='</ul>'; inList=false; }
+    if (t === '') continue;
+    html += '<p class="chat-p">'+inline(t)+'</p>';
+  }
+  if (inList) html += '</ul>';
+  return html;
+}
+
+// Distingue una negativa real a dar asesoria de una mencion rutinaria del abogado.
+function guardrailHit(text){
+  const refusal = /no puedo (determinar|decir|opinar|evaluar|asesorar|cotizar|responder)|no debo (opinar|decir)|solo un abogado (puede|podrá)|(lo|la|los|las) tiene que (responder|decidir|evaluar|confirmar) un abogado|no (doy|brindo|ofrezco) asesor|no constituye asesor|no puedo prometer|nadie puede prometer|depende de tu situaci[oó]n personal|I can'?t (assess|determine|advise|tell you if|comment)|cannot (assess|determine|advise|comment)|only an attorney can|no attorney can promise|can'?t promise|depends on your (personal )?situation/i.test(text);
+  if (refusal) return 'refusal';
+  if (/noted your details|I'?ve noted|I have your|tus datos (quedan|est[aá]n) (registrados|guardados)|hemos registrado|registr[eé] tus datos|an attorney (will|can) (follow up|contact)/i.test(text)) return 'captured';
+  return null;
+}
+
+function renderLead(lead){
+  if (!lead) return '';
+  const fields = [
+    ['Nombre', lead.nombre], ['Email', lead.email], ['WhatsApp', lead.whatsapp],
+    ['Servicio', lead.servicio], ['Nacionalidad', lead.nacionalidad],
+    ['Ubicación', lead.ubicacion], ['Plazo', lead.timeline], ['Idioma', lead.idioma],
+  ].filter(function(p){ return p[1] && String(p[1]).trim(); });
+  if (!fields.length) return '';
+  const rows = fields.map(function(p){ return '<div class="f"><span class="k">'+esc(p[0])+'</span><span class="v">'+esc(p[1])+'</span></div>'; }).join('');
+  return '<div class="leadcard"><div class="hd">&#10003; Lead capturado · enviado al abogado</div>'+rows+'</div>';
+}
+
+function addBubble(role, text, opts) {
+  opts = opts || {};
+  const row = document.createElement('div');
+  row.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
+  const b = document.createElement('div');
+  b.className = (role === 'user' ? 'bubble-user' : 'bubble-bot') + ' px-4 py-2.5 text-[13.5px] max-w-[88%]';
+  if (role === 'user') {
+    b.innerHTML = esc(text);
+  } else {
+    let extra = '';
+    if (opts.guard === 'refusal') extra += '<div class="guard">&#9878;&#65039; Se negó a dar asesoría y derivó al abogado. Exactamente lo que debe hacer.</div>';
+    if (opts.guard === 'captured') extra += '<div class="guard" style="background:#F3FAF6;border-color:#BFE3D0;color:#0F5132">&#10003; Lead capturado con nombre y contacto. Llega al abogado en segundos.</div>';
+    if (opts.lead) extra += renderLead(opts.lead);
+    b.innerHTML = fmt(text) + extra;
+  }
+  row.appendChild(b);
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+  return b;
+}
+
+function addTyping(){
+  const row = document.createElement('div');
+  row.className = 'flex justify-start';
+  row.innerHTML = '<div class="bubble-bot px-4 py-3"><span class="typing"><span></span><span></span><span></span></span></div>';
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+  return row;
+}
+
+let busy = false;
+async function send(text){
+  const q = String(text || '').trim();
+  if (!q || busy) return;
+  busy = true;
+  addBubble('user', q);
+  history.push({ role: 'user', content: q });
+  input.value = '';
+  input.style.height = 'auto';
+  const t = addTyping();
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history.slice(-12), origen: ORIGEN })
+    });
+    const data = await res.json();
+    t.remove();
+    const reply = (data && data.content) ? data.content : 'Perdona, ¿me lo repites?';
+    history.push({ role: 'assistant', content: reply });
+    addBubble('assistant', reply, {
+      guard: guardrailHit(reply),
+      lead: (data && data.lead) ? data.lead : null
+    });
+  } catch (e) {
+    t.remove();
+    addBubble('assistant', 'Tuve un problema de conexión. Intenta de nuevo.');
+  } finally {
+    busy = false;
+    input.focus();
+  }
+}
+
+// Saludo inicial
+addBubble('assistant', GREETING);
+history.push({ role: 'assistant', content: GREETING });
+
+// Formulario
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  send(input.value);
+});
+input.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input.value); }
+});
+input.addEventListener('input', function(){
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 128) + 'px';
+});
+
+// Chips de caso
+document.getElementById('chips').addEventListener('click', function(e){
+  const btn = e.target.closest('.chip-demo');
+  if (!btn) return;
+  send(btn.getAttribute('data-q'));
+  document.getElementById('chat-step').scrollIntoView({ behavior:'smooth', block:'center' });
+  setTimeout(function(){ input.focus(); }, 600);
+});
+
+// Barra de idiomas
+document.querySelectorAll('.langbar button').forEach(function(b){
+  b.addEventListener('click', function(){ send(b.getAttribute('data-say')); });
+});
+
+// CTA final: lleva al chat
+document.getElementById('cta-start').addEventListener('click', function(){
+  document.getElementById('chat-step').scrollIntoView({ behavior:'smooth', block:'center' });
+  setTimeout(function(){ input.focus(); }, 600);
+});
+
+// Modo inmersivo en móvil (evita que el teclado tape el chat)
+const chatStep = document.getElementById('chat-step');
+function enterImmersive(){
+  if (window.innerWidth > 1023) return;
+  document.body.classList.add('chat-immersive');
+}
+function exitImmersive(){
+  document.body.classList.remove('chat-immersive');
+  document.body.classList.remove('kb-open');
+}
+input.addEventListener('focus', enterImmersive);
+document.getElementById('chat-close').addEventListener('click', function(e){ e.preventDefault(); exitImmersive(); });
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', function(){
+    document.body.style.setProperty('--vvh', window.visualViewport.height + 'px');
+    document.body.classList.toggle('kb-open', window.visualViewport.height < window.innerHeight - 120);
+  });
+}
+window.addEventListener('orientationchange', exitImmersive);
+</script>
+</body>
+</html>
