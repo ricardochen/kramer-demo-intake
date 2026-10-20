@@ -45,9 +45,9 @@ d.rounded_rectangle([LX, 36, LX + seal, 84], radius=11, fill=GOLD)
 d.text((LX + 16, 41), "DEMO", font=fb(30), fill=NAVY)
 d.text((LX + seal + 13, 53), "funcional · datos ficticios", font=fb(15), fill=MUTED)
 
-d.text((LX, 104), "Contesta 24 horas tarde, en un solo idioma.",
-       font=fb(36), fill=WHITE)
-d.text((LX, 152), "El agente contesta en 3 segundos, en tres.", font=fb(30), fill=GOLD)
+d.text((LX, 106), "Contesta 24 horas tarde, en un solo idioma.",
+       font=fb(34), fill=WHITE)
+d.text((LX, 154), "El agente contesta en 3 segundos, en su idioma.", font=fb(28), fill=GOLD)
 
 # ---------- burbuja del visitante ----------
 QY, QH = 214, 58
@@ -58,16 +58,16 @@ d.text((qx0 + 20, QY + 9), "¿Yo califico para la visa?", font=fb(19), fill=(255
 d.text((qx0 + 20, QY + 32), "¿Cuánto cuesta?", font=fb(19), fill=(255, 255, 255))
 
 # ---------- tarjeta del agente ----------
-CY = 288
-CARD_H = 246
+CY = 272
+CARD_H = 278
 d.rounded_rectangle([LX, CY, RX, CY + CARD_H], radius=18, fill=(255, 255, 255))
 
 d.rounded_rectangle([LX + 26, CY + 20, LX + 70, CY + 64], radius=11, fill=NAVY)
 d.text((LX + 36, CY + 28), "AI", font=fb(19), fill=GOLD)
 d.text((LX + 84, CY + 22), "Asistente de intake", font=fb(19), fill=NAVY)
-d.text((LX + 84, CY + 48), "EN · ES · DE · nunca da asesoría", font=fn(15), fill=(15, 81, 50))
+d.text((LX + 84, CY + 48), "cualquier idioma · nunca da asesoría", font=fn(15), fill=(15, 81, 50))
 
-ty = CY + 88
+ty = CY + 84
 rows = [
     ("No puedo decirte si calificas.", NAVY, fb(19)),
     ("Eso lo define un abogado, caso por caso.", CARD, fn(18)),
@@ -76,12 +76,12 @@ rows = [
 ]
 for txt, col, fnt in rows:
     d.text((LX + 26, ty), txt, font=fnt, fill=col)
-    ty += 40
+    ty += 38
 
 d.line([LX + 26, ty + 6, RX - 26, ty + 6], fill=(226, 220, 200), width=2)
 d.text((LX + 26, ty + 18), "LEAD CAPTURADO", font=fb(13), fill=GOLD2)
 
-py = ty + 40
+py = ty + 38
 sx = LX + 26
 for label in ["servicio", "nacionalidad", "ubicación", "plazo"]:
     pw = d.textlength(label, font=fb(14)) + 22
@@ -90,14 +90,14 @@ for label in ["servicio", "nacionalidad", "ubicación", "plazo"]:
     sx += pw + 11
 
 # ---------- pie ----------
-d.line([LX, 556, RX, 556], fill=(40, 62, 96), width=2)
-d.text((LX, 570), "Ricardo Chen", font=fb(20), fill=WHITE)
-d.text((LX, 596), "Consultoría e implementación de IA para empresas", font=fn(15), fill=MUTED)
+d.line([LX, 566, RX, 566], fill=(40, 62, 96), width=2)
+d.text((LX, 578), "Ricardo Chen", font=fb(19), fill=WHITE)
+d.text((LX, 602), "Consultoría e implementación de IA para empresas", font=fn(14), fill=MUTED)
 
 btn = "Pruébalo tú mismo"
 bw = d.textlength(btn, font=fb(17)) + 42
-d.rounded_rectangle([RX - bw, 568, RX, 606], radius=10, fill=GOLD)
-d.text((RX - bw + 21, 576), btn, font=fb(17), fill=NAVY)
+d.rounded_rectangle([RX - bw, 574, RX, 610], radius=10, fill=GOLD)
+d.text((RX - bw + 21, 582), btn, font=fb(17), fill=NAVY)
 
 out = "/tmp/kramer/og-card.png"
 canvas.save(out, "PNG")

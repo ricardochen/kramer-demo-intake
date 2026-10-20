@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Agente de intake legal — Demo funcional</title>
-<meta name="description" content="Un agente que califica consultas legales en segundos, en inglés, español y alemán, y entrega al abogado un lead estructurado. Nunca da asesoría. Demo funcional.">
+<meta name="description" content="Un agente que califica consultas legales en segundos, en el idioma del visitante, y entrega al abogado un lead estructurado. Nunca da asesoría. Demo funcional.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ricardochen.github.io/kramer-demo-intake/">
 
@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="Ricardo Chen — IA operativa">
 <meta property="og:locale" content="es_PA">
 <meta property="og:title" content="Agente de intake legal — Demo funcional">
-<meta property="og:description" content="Califica consultas en inglés, español y alemán. Entrega el lead al abogado en segundos. Nunca da asesoría legal.">
+<meta property="og:description" content="Califica consultas en el idioma del visitante. Entrega el lead al abogado en segundos. Nunca da asesoría legal.">
 <meta property="og:url" content="https://ricardochen.github.io/kramer-demo-intake/">
 <meta property="og:image" content="https://ricardochen.github.io/kramer-demo-intake/og-card.png">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Agente de intake legal — Demo funcional">
-<meta name="twitter:description" content="Califica consultas en EN/ES/DE. Entrega el lead al abogado. Nunca da asesoría legal.">
+<meta name="twitter:description" content="Califica consultas en cualquier idioma. Entrega el lead al abogado. Nunca da asesoría legal.">
 <meta name="twitter:image" content="https://ricardochen.github.io/kramer-demo-intake/og-card.png">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230B1F3A'/><text x='50' y='68' font-size='54' font-family='Georgia,serif' font-weight='bold' text-anchor='middle' fill='%23C9A34E'>K</text></svg>">
@@ -122,7 +122,7 @@
       <p class="text-[11px] font-bold uppercase tracking-[.15em]" style="color:#B8912F">Demo funcional · Intake legal</p>
     </div>
     <h1 class="text-2xl sm:text-[34px] font-extrabold leading-tight mt-1">El agente que califica consultas mientras el abogado duerme</h1>
-    <p class="text-[14px] sm:text-[15px] text-[#475467] mt-1.5">Responde en inglés, español y alemán. Captura el lead completo. Nunca da asesoría legal.</p>
+    <p class="text-[14px] sm:text-[15px] text-[#475467] mt-1.5">Responde en el idioma del visitante — inglés, español, alemán o cualquier otro. Captura el lead completo. Nunca da asesoría legal.</p>
     <div class="flex flex-wrap items-center gap-3 mt-4">
       <a href="#chat-step" class="inline-flex items-center justify-center gap-2 text-white font-extrabold text-[13.5px] rounded-xl px-5 py-2.5 transition shadow-sm" style="background:#0B1F3A">
         Pruébalo tú mismo
@@ -143,7 +143,7 @@
 
     <p class="hook text-white">
       Un despacho pierde consultas porque<br class="hidden sm:block">
-      contesta <span class="hook-em">24 horas después</span>, en <span class="hook-em">un solo idioma</span>.
+      contesta <span class="hook-em">24 horas después</span>, y solo si le escriben <span class="hook-em">en su idioma</span>.
     </p>
     <p class="text-[13.5px] text-[#A9BED6] mt-3 leading-relaxed max-w-[60ch]">
       El visitante no deja un formulario: se va. Y el que sí escribe llega como un correo suelto, en texto libre.
@@ -184,7 +184,7 @@
         <h2 class="step-title" style="color:#7A5B12">Prueba con un caso</h2>
       </div>
     </div>
-    <p class="text-[13.5px] sm:text-[14.5px] text-[#334155] mb-4">Elige un caso y el agente lo atiende abajo, en el idioma que corresponda. El tercero es la trampa: pide asesoría legal.</p>
+    <p class="text-[13.5px] sm:text-[14.5px] text-[#334155] mb-4">Elige un caso y el agente lo atiende abajo, en el idioma que corresponda. El tercero es la trampa: pide asesoría legal. También puedes escribirle en francés, portugués, italiano o ruso.</p>
     <div class="grid sm:grid-cols-3 gap-2.5" id="chips">
       <button class="chip-demo" type="button" data-q="Hi, I am interested in the Friendly Nations Visa. Can you tell me about it?">
         <span class="flag">EN</span>
@@ -221,7 +221,7 @@
           </div>
           <div class="leading-tight min-w-0">
             <p class="font-bold text-[14px]">Asistente de intake</p>
-            <p class="text-[11.5px] text-emerald-600 font-semibold mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 align-middle"></span>En línea · EN · ES · DE</p>
+            <p class="text-[11.5px] text-emerald-600 font-semibold mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 align-middle"></span>En línea · cualquier idioma</p>
           </div>
         </div>
         <div class="langbar hidden sm:flex">
