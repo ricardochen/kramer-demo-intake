@@ -261,7 +261,7 @@
             En una sesión revisamos dónde se te van las consultas hoy y qué vale la pena automatizar primero. Sin costo y sin compromiso.
           </p>
           <p class="text-[#BCCEE2] text-[14px] sm:text-[14.5px] leading-relaxed mt-2">
-            Dime cómo contactarte y te escribo yo. Sin formulario.
+            Déjame tus datos y te escribo yo. Directo conmigo, no con el despacho.
           </p>
         </div>
         <div class="shrink-0 w-full sm:w-auto">
@@ -269,7 +269,34 @@
             Agendar mi diagnóstico
             <svg style="position:relative;top:-1px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
-          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Tres preguntas aquí mismo. 20 segundos.</p>
+          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Tres campos. 20 segundos.</p>
+        </div>
+      </div>
+      <div id="diag-wrap" class="hidden px-7 sm:px-10 pb-8">
+        <form id="diag-form" class="bg-white/5 border border-white/12 rounded-2xl p-5 sm:p-6" novalidate>
+          <p class="text-[11px] font-bold uppercase tracking-[.14em]" style="color:#C9A34E">Tu diagnóstico</p>
+          <p class="text-[13px] text-[#BCCEE2] mt-1.5 mb-4">Esto me llega directo a mí, Ricardo. No pasa por el agente del despacho.</p>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="block"><span class="text-[10.5px] font-bold uppercase tracking-[.08em] text-[#9FB3C8]">Nombre</span>
+              <input name="nombre" type="text" required placeholder="Tu nombre completo"
+                class="mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E]"></label>
+            <label class="block"><span class="text-[10.5px] font-bold uppercase tracking-[.08em] text-[#9FB3C8]">Email o WhatsApp</span>
+              <input name="contacto" type="text" required placeholder="tu@empresa.com o +507 6000-0000"
+                class="mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E]"></label>
+            <label class="block sm:col-span-2"><span class="text-[10.5px] font-bold uppercase tracking-[.08em] text-[#9FB3C8]">¿Qué proceso te come más tiempo? <span class="text-[#7E96B4] normal-case tracking-normal font-medium">(opcional)</span></span>
+              <input name="proceso" type="text" placeholder="Ej: responder consultas de clientes, cotizar, onboarding"
+                class="mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E]"></label>
+          </div>
+          <p id="diag-err" class="hidden mt-3 text-[12px] font-semibold" style="color:#FFB4A8"></p>
+          <div class="flex flex-wrap items-center gap-3 mt-4">
+            <button type="submit" id="diag-submit" class="inline-flex items-center justify-center gap-2 text-[#0B1F3A] font-extrabold text-[14px] rounded-xl px-6 py-3 transition" style="background:#C9A34E">Enviar y agendar</button>
+            <button type="button" id="diag-cancel" class="text-[12.5px] font-semibold text-[#8FA6C0] hover:text-white">Cancelar</button>
+          </div>
+        </form>
+        <div id="diag-ok" class="hidden bg-white/5 border border-[#C9A34E]/40 rounded-2xl p-6 text-center">
+          <p class="text-[24px]">✅</p>
+          <p class="text-white font-extrabold text-[16px] mt-1">Recibido.</p>
+          <p class="text-[13px] text-[#BCCEE2] mt-1">Te escribo yo en menos de 24 horas para coordinar la sesión.</p>
         </div>
       </div>
       <div class="border-t border-white/10 px-7 sm:px-10 pt-5 pb-9 flex flex-col sm:flex-row sm:flex-wrap items-center gap-x-4 gap-y-2">
@@ -426,23 +453,85 @@ document.querySelectorAll('.langbar button').forEach(function(b){
   b.addEventListener('click', function(){ send(b.getAttribute('data-say')); });
 });
 
-// CTA final: captura el lead en el mismo chat (mismo patron que el demo del banco).
-// Si el visitante ya converso, no reiniciamos nada: solo lo llevamos al chat.
-const CTA_PROMPT = 'Quiero agendar mi diagnostico sin costo.';
-let ctaSent = false;
-document.getElementById('cta-start').addEventListener('click', function(){
-  document.getElementById('chat-step').scrollIntoView({ behavior:'smooth', block:'center' });
-  if (ctaSent) { setTimeout(function(){ input.focus(); }, 600); return; }
-  ctaSent = true;
+// CTA final: captura del DIAGNOSTICO de Ricardo (no del despacho).
+// Este formulario NO habla con el agente de Kraemer: el visitante aqui es
+// prospecto de Ricardo, no cliente del despacho.
+const DIAG_ENDPOINT = 'https://xwvaegliifpggqlmxxhu.supabase.co/functions/v1/diagnostico-lead';
+const diagWrap = document.getElementById('diag-wrap');
+const diagForm = document.getElementById('diag-form');
+const diagErr = document.getElementById('diag-err');
+const diagOk = document.getElementById('diag-ok');
+const diagBtn = document.getElementById('diag-start') || document.getElementById('cta-start');
+
+function showDiag(){
+  diagWrap.classList.remove('hidden');
+  diagOk.classList.add('hidden');
+  diagForm.classList.remove('hidden');
   setTimeout(function(){
-    // Solo arrancamos la captura si el chat sigue en el saludo (nadie ha conversado aun)
-    const soloGreeting = history.filter(function(m){ return m.role === 'user'; }).length === 0;
-    if (soloGreeting) {
-      send(CTA_PROMPT);
-    } else {
-      input.focus();
-    }
-  }, 700);
+    diagWrap.scrollIntoView({ behavior:'smooth', block:'center' });
+    const first = diagForm.querySelector('input[name="nombre"]');
+    if (first) first.focus();
+  }, 120);
+}
+
+diagBtn.addEventListener('click', showDiag);
+
+document.getElementById('diag-cancel').addEventListener('click', function(){
+  diagWrap.classList.add('hidden');
+});
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_RE = /^[+]?[0-9\s().-]{7,}$/;
+
+diagForm.addEventListener('submit', async function(e){
+  e.preventDefault();
+  diagErr.classList.add('hidden');
+
+  const nombre = diagForm.nombre.value.trim();
+  const contacto = diagForm.contacto.value.trim();
+  const proceso = diagForm.proceso.value.trim();
+
+  if (!nombre) { diagErr.textContent = 'Falta tu nombre.'; diagErr.classList.remove('hidden'); return; }
+  if (!contacto) { diagErr.textContent = 'Deja un email o un WhatsApp.'; diagErr.classList.remove('hidden'); return; }
+
+  // El campo es uno solo: se detecta si es email o telefono.
+  let email = '', whatsapp = '';
+  if (contacto.indexOf('@') > -1) {
+    if (!EMAIL_RE.test(contacto)) { diagErr.textContent = 'Ese email no parece válido.'; diagErr.classList.remove('hidden'); return; }
+    email = contacto;
+  } else {
+    if (!PHONE_RE.test(contacto)) { diagErr.textContent = 'Ese número no parece válido.'; diagErr.classList.remove('hidden'); return; }
+    whatsapp = contacto;
+  }
+
+  const original = diagBtn.textContent;
+  const submit = document.getElementById('diag-submit');
+  submit.disabled = true;
+  submit.textContent = 'Enviando…';
+
+  try {
+    const res = await fetch(DIAG_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre: nombre,
+        email: email,
+        whatsapp: whatsapp,
+        proceso: proceso,
+        origen: 'demo_intake_legal:' + location.pathname
+      })
+    });
+    const data = await res.json().catch(function(){ return {}; });
+    if (!res.ok) throw new Error(data.error || 'No se pudo enviar.');
+    diagForm.classList.add('hidden');
+    diagOk.classList.remove('hidden');
+  } catch (err) {
+    diagErr.textContent = (err && err.message) ? err.message : 'No se pudo enviar. Intenta de nuevo.';
+    diagErr.classList.remove('hidden');
+  } finally {
+    submit.disabled = false;
+    submit.textContent = 'Enviar y agendar';
+  }
 });
 
 // Modo inmersivo en móvil (evita que el teclado tape el chat)
