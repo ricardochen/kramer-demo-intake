@@ -45,8 +45,8 @@ d.rounded_rectangle([LX, 36, LX + seal, 84], radius=11, fill=GOLD)
 d.text((LX + 16, 41), "DEMO", font=fb(30), fill=NAVY)
 d.text((LX + seal + 13, 53), "funcional · datos ficticios", font=fb(15), fill=MUTED)
 
-d.text((LX, 106), "Convierte la consulta en un lead completo.", font=fb(34), fill=WHITE)
-d.text((LX, 154), "En su idioma, 24/7. Sin dar asesoría legal.", font=fb(28), fill=GOLD)
+d.text((LX, 106), "Los formularios de contacto están obsoletos.", font=fb(32), fill=WHITE)
+d.text((LX, 154), "Captura el lead en su idioma, 24/7.", font=fb(28), fill=GOLD)
 
 # ---------- burbuja del visitante ----------
 QY, QH = 214, 58
