@@ -45,9 +45,8 @@ d.rounded_rectangle([LX, 36, LX + seal, 84], radius=11, fill=GOLD)
 d.text((LX + 16, 41), "DEMO", font=fb(30), fill=NAVY)
 d.text((LX + seal + 13, 53), "funcional · datos ficticios", font=fb(15), fill=MUTED)
 
-d.text((LX, 106), "Contesta 24 horas tarde, en un solo idioma.",
-       font=fb(34), fill=WHITE)
-d.text((LX, 154), "El agente contesta en 3 segundos, en su idioma.", font=fb(28), fill=GOLD)
+d.text((LX, 106), "Califica al visitante en 3 segundos.", font=fb(36), fill=WHITE)
+d.text((LX, 154), "En su idioma, 24/7. Sin dar asesoría legal.", font=fb(28), fill=GOLD)
 
 # ---------- burbuja del visitante ----------
 QY, QH = 214, 58
