@@ -261,7 +261,7 @@
             En una sesión revisamos dónde se te van las consultas hoy y qué vale la pena automatizar primero. Sin costo y sin compromiso.
           </p>
           <p class="text-[#BCCEE2] text-[14px] sm:text-[14.5px] leading-relaxed mt-2">
-            Déjame tus datos y te escribo yo. Directo conmigo, no con el despacho.
+            Cuéntame en el chat y te escribo yo. Directo conmigo, no con el despacho.
           </p>
         </div>
         <div class="shrink-0 w-full sm:w-auto">
@@ -269,35 +269,32 @@
             Agendar mi diagnóstico
             <svg style="position:relative;top:-1px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
-          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Tres campos. 20 segundos.</p>
+          <p class="text-[11.5px] text-[#8FA6C0] sm:text-right mt-2.5">Tres preguntas. 20 segundos. Sin formulario.</p>
         </div>
       </div>
       <div id="diag-wrap" class="hidden px-7 sm:px-10 pb-8">
-        <form id="diag-form" class="bg-white/5 border border-white/12 rounded-2xl p-5 sm:p-6" novalidate>
-          <p class="text-[11px] font-bold uppercase tracking-[.14em]" style="color:#C9A34E">Tu diagnóstico</p>
-          <p class="text-[13px] text-[#BCCEE2] mt-1.5 mb-4">Esto me llega directo a mí, Ricardo. No pasa por el agente del despacho.</p>
-          <div class="grid sm:grid-cols-2 gap-3">
-            <label class="block"><span class="text-[10.5px] font-bold uppercase tracking-[.08em] text-[#9FB3C8]">Nombre</span>
-              <input name="nombre" type="text" required placeholder="Tu nombre completo"
-                class="mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E]"></label>
-            <label class="block"><span class="text-[10.5px] font-bold uppercase tracking-[.08em] text-[#9FB3C8]">Email o WhatsApp</span>
-              <input name="contacto" type="text" required placeholder="tu@empresa.com o +507 6000-0000"
-                class="mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E]"></label>
-            <label class="block sm:col-span-2"><span class="text-[10.5px] font-bold uppercase tracking-[.08em] text-[#9FB3C8]">¿Qué proceso te come más tiempo? <span class="text-[#7E96B4] normal-case tracking-normal font-medium">(opcional)</span></span>
-              <input name="proceso" type="text" placeholder="Ej: responder consultas de clientes, cotizar, onboarding"
-                class="mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E]"></label>
+        <div class="bg-white/5 border border-white/12 rounded-2xl overflow-hidden">
+          <div class="flex items-center justify-between gap-3 px-4 py-2.5 border-b border-white/10">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-lg grid place-items-center shrink-0" style="background:#C9A34E">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0B1F3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <div class="leading-tight min-w-0">
+                <p class="font-bold text-[13px] text-white">Ricardo</p>
+                <p class="text-[10.5px] text-[#9FB3C8] mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 align-middle"></span>te responde al instante</p>
+              </div>
+            </div>
+            <button type="button" id="diag-cancel" class="text-[11.5px] font-semibold text-[#8FA6C0] hover:text-white shrink-0">Cerrar</button>
           </div>
-          <p id="diag-err" class="hidden mt-3 text-[12px] font-semibold" style="color:#FFB4A8"></p>
-          <div class="flex flex-wrap items-center gap-3 mt-4">
-            <button type="submit" id="diag-submit" class="inline-flex items-center justify-center gap-2 text-[#0B1F3A] font-extrabold text-[14px] rounded-xl px-6 py-3 transition" style="background:#C9A34E">Enviar y agendar</button>
-            <button type="button" id="diag-cancel" class="text-[12.5px] font-semibold text-[#8FA6C0] hover:text-white">Cancelar</button>
-          </div>
-        </form>
-        <div id="diag-ok" class="hidden bg-white/5 border border-[#C9A34E]/40 rounded-2xl p-6 text-center">
-          <p class="text-[24px]">✅</p>
-          <p class="text-white font-extrabold text-[16px] mt-1">Recibido.</p>
-          <p class="text-[13px] text-[#BCCEE2] mt-1">Te escribo yo en menos de 24 horas para coordinar la sesión.</p>
+          <div id="diag-log" class="px-4 py-4 space-y-2.5 max-h-[280px] overflow-y-auto scroll" style="min-height:120px"></div>
+          <form id="diag-form" class="flex items-end gap-2 p-3 border-t border-white/10" novalidate>
+            <textarea id="diag-input" rows="1" placeholder="Escribe aquí…"
+              class="flex-1 min-w-0 resize-none rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 text-[14px] text-white placeholder-[#7E96B4] focus:outline-none focus:border-[#C9A34E] field-16"
+              style="min-height:2.6rem;line-height:1.5"></textarea>
+            <button type="submit" class="text-[#0B1F3A] font-extrabold px-4 py-2.5 rounded-xl text-[13px] shrink-0" style="background:#C9A34E">Enviar</button>
+          </form>
         </div>
+        <p id="diag-err" class="hidden mt-2 text-[12px] font-semibold" style="color:#FFB4A8"></p>
       </div>
       <div class="border-t border-white/10 px-7 sm:px-10 pt-5 pb-9 flex flex-col sm:flex-row sm:flex-wrap items-center gap-x-4 gap-y-2">
         <p class="text-[11px] font-bold text-white">Ricardo Chen</p>
@@ -453,25 +450,145 @@ document.querySelectorAll('.langbar button').forEach(function(b){
   b.addEventListener('click', function(){ send(b.getAttribute('data-say')); });
 });
 
-// CTA final: captura del DIAGNOSTICO de Ricardo (no del despacho).
-// Este formulario NO habla con el agente de Kraemer: el visitante aqui es
-// prospecto de Ricardo, no cliente del despacho.
+// CTA final: captura del DIAGNOSTICO de Ricardo, en formato conversacion.
+// Este mini-chat NO habla con el agente del despacho: aqui el visitante es
+// prospecto de Ricardo. Nada de formularios — la pagina dice que estan
+// obsoletos, asi que la captura es una conversacion.
 const DIAG_ENDPOINT = 'https://xwvaegliifpggqlmxxhu.supabase.co/functions/v1/diagnostico-lead';
 const diagWrap = document.getElementById('diag-wrap');
+const diagLog = document.getElementById('diag-log');
 const diagForm = document.getElementById('diag-form');
+const diagInput = document.getElementById('diag-input');
 const diagErr = document.getElementById('diag-err');
-const diagOk = document.getElementById('diag-ok');
-const diagBtn = document.getElementById('diag-start') || document.getElementById('cta-start');
+const diagBtn = document.getElementById('cta-start');
 
-function showDiag(){
+// Estado de la conversacion de captura
+const diag = { nombre: '', contacto: '', proceso: '', step: 'nombre', done: false, busy: false };
+let diagStarted = false;
+
+function diagBubble(role, text) {
+  const row = document.createElement('div');
+  row.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
+  const b = document.createElement('div');
+  b.className = 'max-w-[86%] px-3.5 py-2 text-[13px] leading-relaxed ' +
+    (role === 'user'
+      ? 'rounded-2xl rounded-br-sm text-[#0B1F3A] font-semibold'
+      : 'rounded-2xl rounded-bl-sm bg-white/10 text-[#DCE7F2] border border-white/10');
+  if (role === 'user') b.style.background = '#C9A34E';
+  b.innerHTML = esc(text);
+  row.appendChild(b);
+  diagLog.appendChild(row);
+  diagLog.scrollTop = diagLog.scrollHeight;
+}
+
+function diagSay(text) {
+  setTimeout(function(){ diagBubble('assistant', text); }, 220);
+}
+
+function startDiag() {
+  if (diagStarted) return;
+  diagStarted = true;
+  diagSay('Hola. Antes de agendar te hago tres preguntas rápidas — sin formulario, como debe ser.');
+  diagSay('¿Cómo te llamas?');
+  diag.step = 'nombre';
+}
+
+function showDiag() {
   diagWrap.classList.remove('hidden');
-  diagOk.classList.add('hidden');
-  diagForm.classList.remove('hidden');
+  diagErr.classList.add('hidden');
   setTimeout(function(){
-    diagWrap.scrollIntoView({ behavior:'smooth', block:'center' });
-    const first = diagForm.querySelector('input[name="nombre"]');
-    if (first) first.focus();
+    diagWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    startDiag();
+    diagInput.focus();
   }, 120);
+}
+
+function finishDiag() {
+  diag.done = true;
+  diagSay('Listo, ' + diag.nombre.split(' ')[0] + '. Me llega directo a mí y te escribo en menos de 24 horas.');
+  diagInput.setAttribute('disabled', 'disabled');
+  diagInput.placeholder = 'Conversación completada';
+  diagForm.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+}
+
+function failDiag(msg) {
+  diagErr.textContent = msg;
+  diagErr.classList.remove('hidden');
+  diagSay(msg + ' ¿Me lo repites?');
+}
+
+const DIAG_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const DIAG_PHONE_RE = /^[+]?[0-9\s().-]{7,}$/;
+
+async function submitDiag() {
+  diag.busy = true;
+  const btn = diagForm.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  let email = '', whatsapp = '';
+  if (diag.contacto.indexOf('@') > -1) email = diag.contacto; else whatsapp = diag.contacto;
+
+  try {
+    const res = await fetch(DIAG_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre: diag.nombre,
+        email: email,
+        whatsapp: whatsapp,
+        proceso: diag.proceso,
+        origen: 'demo_intake_legal:' + location.pathname
+      })
+    });
+    const data = await res.json().catch(function(){ return {}; });
+    if (!res.ok) throw new Error(data.error || 'No se pudo enviar.');
+    finishDiag();
+  } catch (err) {
+    failDiag((err && err.message) ? err.message : 'No se pudo enviar. Intenta de nuevo.');
+    diag.step = 'contacto';
+  } finally {
+    diag.busy = false;
+    btn.disabled = false;
+    btn.textContent = 'Enviar';
+  }
+}
+
+function handleDiagInput(raw) {
+  const text = String(raw || '').trim();
+  if (!text || diag.busy || diag.done) return;
+
+  diagBubble('user', text);
+  diagErr.classList.add('hidden');
+
+  if (diag.step === 'nombre') {
+    if (text.length < 2) { failDiag('Necesito al menos tu nombre.'); return; }
+    diag.nombre = text;
+    diag.step = 'contacto';
+    diagSay('Gracias, ' + text.split(' ')[0] + '. ¿Un email o un WhatsApp para escribirte?');
+    return;
+  }
+
+  if (diag.step === 'contacto') {
+    if (text.indexOf('@') > -1) {
+      if (!DIAG_EMAIL_RE.test(text)) { failDiag('Ese email no parece válido.'); return; }
+      diag.contacto = text;
+    } else {
+      if (!DIAG_PHONE_RE.test(text)) { failDiag('Ese número no parece válido.'); return; }
+      diag.contacto = text;
+    }
+    diag.step = 'proceso';
+    diagSay('Anotado. Última: ¿qué proceso te come más tiempo hoy?');
+    return;
+  }
+
+  if (diag.step === 'proceso') {
+    diag.proceso = text;
+    diag.step = 'enviando';
+    diagSay('Perfecto. Guardando…');
+    submitDiag();
+    return;
+  }
 }
 
 diagBtn.addEventListener('click', showDiag);
@@ -480,58 +597,20 @@ document.getElementById('diag-cancel').addEventListener('click', function(){
   diagWrap.classList.add('hidden');
 });
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_RE = /^[+]?[0-9\s().-]{7,}$/;
-
-diagForm.addEventListener('submit', async function(e){
+diagForm.addEventListener('submit', function(e){
   e.preventDefault();
-  diagErr.classList.add('hidden');
+  const v = diagInput.value;
+  diagInput.value = '';
+  diagInput.style.height = 'auto';
+  handleDiagInput(v);
+});
 
-  const nombre = diagForm.nombre.value.trim();
-  const contacto = diagForm.contacto.value.trim();
-  const proceso = diagForm.proceso.value.trim();
-
-  if (!nombre) { diagErr.textContent = 'Falta tu nombre.'; diagErr.classList.remove('hidden'); return; }
-  if (!contacto) { diagErr.textContent = 'Deja un email o un WhatsApp.'; diagErr.classList.remove('hidden'); return; }
-
-  // El campo es uno solo: se detecta si es email o telefono.
-  let email = '', whatsapp = '';
-  if (contacto.indexOf('@') > -1) {
-    if (!EMAIL_RE.test(contacto)) { diagErr.textContent = 'Ese email no parece válido.'; diagErr.classList.remove('hidden'); return; }
-    email = contacto;
-  } else {
-    if (!PHONE_RE.test(contacto)) { diagErr.textContent = 'Ese número no parece válido.'; diagErr.classList.remove('hidden'); return; }
-    whatsapp = contacto;
-  }
-
-  const original = diagBtn.textContent;
-  const submit = document.getElementById('diag-submit');
-  submit.disabled = true;
-  submit.textContent = 'Enviando…';
-
-  try {
-    const res = await fetch(DIAG_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nombre: nombre,
-        email: email,
-        whatsapp: whatsapp,
-        proceso: proceso,
-        origen: 'demo_intake_legal:' + location.pathname
-      })
-    });
-    const data = await res.json().catch(function(){ return {}; });
-    if (!res.ok) throw new Error(data.error || 'No se pudo enviar.');
-    diagForm.classList.add('hidden');
-    diagOk.classList.remove('hidden');
-  } catch (err) {
-    diagErr.textContent = (err && err.message) ? err.message : 'No se pudo enviar. Intenta de nuevo.';
-    diagErr.classList.remove('hidden');
-  } finally {
-    submit.disabled = false;
-    submit.textContent = 'Enviar y agendar';
-  }
+diagInput.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); diagForm.requestSubmit(); }
+});
+diagInput.addEventListener('input', function(){
+  diagInput.style.height = 'auto';
+  diagInput.style.height = Math.min(diagInput.scrollHeight, 100) + 'px';
 });
 
 // Modo inmersivo en móvil (evita que el teclado tape el chat)
