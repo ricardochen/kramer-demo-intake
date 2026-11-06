@@ -1,3 +1,11 @@
+**EN —** A 24/7 legal intake agent for a Panamanian law firm. It qualifies enquiries in English, Spanish and German, captures a structured lead, and **never gives legal advice** — no case interpretation, no fee quotes, no predictions.
+
+The guardrail is the interesting part: every answer is bounded to the firm's knowledge base, and the agent is designed to hand off rather than improvise. That is a product decision, not a prompt suggestion.
+
+**Live demo:** https://ricardochen.github.io/kramer-demo-intake/
+
+---
+
 # Agente de intake legal — Demo funcional
 
 Demo funcional de un agente de intake 24/7 para un despacho de abogados en Panamá.
